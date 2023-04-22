@@ -1,11 +1,13 @@
 include_guard(GLOBAL)
 
-set(CMAKE_C_COMPILER cc)
-set(CMAKE_CXX_COMPILER c++)
+set(CMAKE_C_COMPILER gcc-10)
+set(CMAKE_CXX_COMPILER g++-10)
+
+set(CMAKE_CXX_STANDARD 20 CACHE STRING "C++ standard.")
+set(CXX_STANDARD_REQUIRED 20 CACHE STRING "C++ standard.")
 
 set(CMAKE_CXX_FLAGS
-  "-std=c++20 \
-   -Wall -Wextra "
+  "-Wall -Wextra "
 CACHE STRING "CXX_FLAGS" FORCE)
 
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -fno-inline -g3" CACHE STRING "C++ DEBUG Flags" FORCE)
