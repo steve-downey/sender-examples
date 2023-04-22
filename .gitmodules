@@ -7,3 +7,6 @@
 [submodule "docker-inf/docker-cxx-dev"]
 	path = docker-inf/docker-cxx-dev
 	url = git@github.com:steve-downey/docker-cxx-dev.git
+[submodule "extern/stdexec"]
+	path = extern/stdexec
+	url = git@github.com:NVIDIA/stdexec.git

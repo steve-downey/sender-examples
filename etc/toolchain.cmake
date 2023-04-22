@@ -1,7 +1,7 @@
 include_guard(GLOBAL)
 
-set(CMAKE_C_COMPILER gcc-10)
-set(CMAKE_CXX_COMPILER g++-10)
+set(CMAKE_C_COMPILER gcc)
+set(CMAKE_CXX_COMPILER g++)
 
 set(CMAKE_CXX_STANDARD 20 CACHE STRING "C++ standard.")
 set(CXX_STANDARD_REQUIRED 20 CACHE STRING "C++ standard.")
