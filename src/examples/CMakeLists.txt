@@ -9,7 +9,16 @@ target_sources(
 
 target_link_libraries(main scratch)
 
+add_executable(hello "")
+
+target_sources(
+  hello
+  PRIVATE
+  hello.cpp)
+
+target_link_libraries(hello PRIVATE stdexec)
+
 install(
-  TARGETS main
+  TARGETS main hello
   DESTINATION ${CMAKE_INSTALL_BINDIR}
   )

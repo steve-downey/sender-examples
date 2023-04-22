@@ -1,7 +1,7 @@
 #! /usr/bin/make -f
 # -*-makefile-*-
 
-INSTALL_PREFIX?=/home/sdowney/install
+INSTALL_PREFIX?=
 PROJECT?=$(shell basename $(CURDIR))
 BUILD_DIR?=../cmake.bld/${PROJECT}
 CONFIGURATION_TYPES?=RelWithDebInfo;Debug;Tsan;Asan
@@ -13,7 +13,7 @@ DOCKER_CMD := docker volume create cmake.bld; docker-compose run --rm dev
 LOCAL_MAKE_CMD := make -f targets.mk
 MAKE_CMD := $(LOCAL_MAKE_CMD)
 
-TARGETS := test clean all ctest realclean cmake
+TARGETS := test clean all ctest realclean cmake install
 
 # These targets are only run locally
 LOCAL_ONLY_TARGETS :=
@@ -73,4 +73,4 @@ docker-shell: ## Shell in container
 help: ## Show this help.
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'  $(MAKEFILE_LIST) targets.mk | sort
 
-.PHONY: install ctest cmake clean realclean help cmake
+.PHONY: ctest cmake clean realclean help cmake

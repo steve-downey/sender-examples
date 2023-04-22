@@ -55,6 +55,7 @@ compile: $(_build_path)/CMakeCache.txt ## Compile the project
 
 .PHONY: install
 install: $(_build_path)/CMakeCache.txt ## Install the project
+	echo INSTALL
 	DESTDIR=$(abspath $(DEST)) ninja -C $(_build_path) -k 0  install
 
 .PHONY: ctest
