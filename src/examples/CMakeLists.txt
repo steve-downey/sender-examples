@@ -27,7 +27,16 @@ target_sources(
 
 target_link_libraries(concurent PRIVATE stdexec)
 
+add_executable(let_value "")
+
+target_sources(
+  let_value
+  PRIVATE
+  let_value.cpp)
+
+target_link_libraries(let_value PRIVATE stdexec)
+
 install(
-  TARGETS main hello concurent
+  TARGETS main hello concurent let_value
   DESTINATION ${CMAKE_INSTALL_BINDIR}
   )
