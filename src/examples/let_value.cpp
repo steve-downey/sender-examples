@@ -24,7 +24,7 @@ auto fun = [](int i) -> stdexec::sender auto {
 auto work = stdexec::when_all(
     stdexec::on(sched, stdexec::just(0) | stdexec::let_value(fun)),
     stdexec::on(sched, stdexec::just(1) | stdexec::let_value(fun)),
-    stdexec::on(sched, stdexec::just(2) | stdexec::let_value(fun))
+    stdexec::on(sched, stdexec::just(2) | stdexec::let_value(fun)));
 
 auto [i, j, k] = stdexec::sync_wait(std::move(work)).value();
 
