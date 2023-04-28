@@ -2,6 +2,7 @@
 #include <stdexec/execution.hpp>
 #include <exec/static_thread_pool.hpp>
 #include <exec/any_sender_of.hpp>
+#include <exec/variant_sender.hpp>
 #include <iostream>
 
 template <class... Ts>
@@ -11,7 +12,7 @@ using any_sender_of = typename exec::any_receiver_ref<
 inline auto tst =
     [](bool                 cond,
        stdexec::sender auto left,
-       stdexec::sender auto right) -> any_sender_of<stdexec::set_value_t()> {
+       stdexec::sender auto right) -> exec::variant_sender<decltype(left), decltype(right)> {
     if (cond)
         return left;
     else
