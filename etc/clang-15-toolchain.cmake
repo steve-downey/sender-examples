@@ -5,7 +5,7 @@ set(CMAKE_CXX_COMPILER clang++-15)
 
 set(CMAKE_CXX_FLAGS
   "-std=c++20 \
-   -Wall -Wextra \
+   -Wall \
    -stdlib=libc++ "
 CACHE STRING "CXX_FLAGS" FORCE)
 
