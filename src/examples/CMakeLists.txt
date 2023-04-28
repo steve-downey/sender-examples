@@ -45,7 +45,32 @@ target_sources(
 
 target_link_libraries(decision PRIVATE stdexec)
 
+add_executable(factorial "")
+
+target_sources(
+  factorial
+  PRIVATE
+  factorial.cpp)
+
+target_link_libraries(factorial PRIVATE stdexec)
+
 install(
-  TARGETS main hello concurent let_value decision
+  TARGETS main hello concurent let_value decision factorial
   DESTINATION ${CMAKE_INSTALL_BINDIR}
   )
+
+
+## Tests
+add_executable(async_test "")
+
+target_sources(
+  async_test
+  PRIVATE
+  async.t.cpp)
+
+target_link_libraries(async_test stdexec)
+target_link_libraries(async_test gtest)
+target_link_libraries(async_test gtest_main)
+
+include(GoogleTest)
+gtest_discover_tests(async_test)
