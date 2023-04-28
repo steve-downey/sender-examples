@@ -17,5 +17,7 @@ int main() {
   auto add_42 = stdexec::then(hi, [](int arg) { return arg + 42; });
 
   auto [i] = stdexec::sync_wait(add_42).value();
+
+  return i;
 }
 // Hello Async World:1 ends here
