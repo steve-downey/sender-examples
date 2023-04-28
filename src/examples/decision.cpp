@@ -1,3 +1,4 @@
+// [[file:../../../async_control.org::*Decision][Decision:1]]
 #include <stdexec/execution.hpp>
 #include <exec/static_thread_pool.hpp>
 #include <exec/any_sender_of.hpp>
@@ -18,30 +19,36 @@ inline auto tst =
 };
 
 int main() {
-    // Declare a pool of 8 worker threads:
-    exec::static_thread_pool pool(8);
+// Decision:1 ends here
 
-    stdexec::scheduler auto sch = pool.get_scheduler();
+// [[file:../../../async_control.org::*Decision][Decision:2]]
+exec::static_thread_pool pool(8);
 
-    stdexec::sender auto begin  = stdexec::schedule(sch);
-    stdexec::sender auto seven  = stdexec::just(7);
-    stdexec::sender auto eleven = stdexec::just(11);
+stdexec::scheduler auto sch = pool.get_scheduler();
 
-    stdexec::sender auto branch =
-        begin
-        | stdexec::then([]() { return std::make_tuple(5, 4); })
-        | stdexec::let_value(
-            [=](auto tpl) {
-            auto const& [i, j] = tpl;
+stdexec::sender auto begin  = stdexec::schedule(sch);
+stdexec::sender auto seven  = stdexec::just(7);
+stdexec::sender auto eleven = stdexec::just(11);
 
-            return tst((i > j),
-                       seven | stdexec::then([&](int k) noexcept {
-                           std::cout << "true branch " << k << '\n';
-                       }),
-                       eleven | stdexec::then([&](int k) noexcept {
-                           std::cout << "false branch " << k << '\n';
-                       }));
-        });
+stdexec::sender auto branch =
+    begin
+    | stdexec::then([]() { return std::make_tuple(5, 4); })
+    | stdexec::let_value(
+        [=](auto tpl) {
+        auto const& [i, j] = tpl;
 
-    stdexec::sync_wait(std::move(branch));
+        return tst((i > j),
+                   seven | stdexec::then([&](int k) noexcept {
+                       std::cout << "true branch " << k << '\n';
+                   }),
+                   eleven | stdexec::then([&](int k) noexcept {
+                       std::cout << "false branch " << k << '\n';
+                   }));
+    });
+
+stdexec::sync_wait(std::move(branch));
+// Decision:2 ends here
+
+// [[file:../../../async_control.org::*Decision][Decision:3]]
 }
+// Decision:3 ends here
