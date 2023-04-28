@@ -54,8 +54,17 @@ target_sources(
 
 target_link_libraries(factorial PRIVATE stdexec)
 
+add_executable(fibonacci "")
+
+target_sources(
+  fibonacci
+  PRIVATE
+  fibonacci.cpp)
+
+target_link_libraries(fibonacci PRIVATE stdexec)
+
 install(
-  TARGETS main hello concurent let_value decision factorial
+  TARGETS main hello concurent let_value decision factorial fibonacci
   DESTINATION ${CMAKE_INSTALL_BINDIR}
   )
 
