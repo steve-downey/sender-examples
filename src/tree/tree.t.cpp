@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 
 #include <memory>
+#include <ranges>
 
 using namespace tree;
 
@@ -33,7 +34,7 @@ TEST(TreeTest, Breathing) {
 }
 
 TEST(TreeTest, construct) {
-    tree::NodePtr<int> t = std::make_shared<Node<int>>();
+    tree::NodePtr<int> t;
 
     Tree<int>::insert(0, t);
 
@@ -72,5 +73,19 @@ TEST(TreeTest, construct) {
     Tree<int>::remove(4, t);
     EXPECT_EQ(nullptr, t->right()->right());
 }
-template class tree::Tree<int>;
-template class tree::Tree<std::string>;
+
+TEST(TreeTest, stress) {
+    tree::NodePtr<int> t;
+    for (auto i : std::ranges::views::iota(1, 10000)) {
+        Tree<int>::insert(i, t);
+    }
+
+    for (auto i : std::ranges::views::iota(1, 10000)) {
+        Tree<int>::remove(i, t);
+    }
+
+    EXPECT_EQ(nullptr, t);
+}
+
+    template class tree::Tree<int>;
+    template class tree::Tree<std::string>;
