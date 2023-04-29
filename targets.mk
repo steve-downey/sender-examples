@@ -60,11 +60,11 @@ install: $(_build_path)/CMakeCache.txt ## Install the project
 
 .PHONY: ctest
 ctest: $(_build_path)/CMakeCache.txt ## Run CTest on current build
-	cd $(_build_path) && ctest
+	cd $(_build_path) && ctest --output-on-failure
 
 .PHONY: ctest_
 ctest_ : compile
-	cd $(_build_path) && ctest
+	cd $(_build_path) && ctest --output-on-failure
 
 .PHONY: test
 test: ctest_ ## Rebuild and run tests
