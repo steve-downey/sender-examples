@@ -77,6 +77,20 @@ install(
   DESTINATION ${CMAKE_INSTALL_BINDIR}
   )
 
+add_executable(backtrack "")
+
+target_sources(
+  backtrack
+  PRIVATE
+  backtrack.cpp)
+
+target_link_libraries(backtrack PRIVATE stdexec tree)
+
+install(
+  TARGETS main hello concurent let_value decision factorial fibonacci
+  DESTINATION ${CMAKE_INSTALL_BINDIR}
+  )
+
 
 ## Tests
 add_executable(async_test "")
