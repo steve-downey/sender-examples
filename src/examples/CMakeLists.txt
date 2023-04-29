@@ -63,6 +63,15 @@ target_sources(
 
 target_link_libraries(fibonacci PRIVATE stdexec)
 
+add_executable(fold "")
+
+target_sources(
+  fold
+  PRIVATE
+  fold.cpp)
+
+target_link_libraries(fold PRIVATE stdexec)
+
 install(
   TARGETS main hello concurent let_value decision factorial fibonacci
   DESTINATION ${CMAKE_INSTALL_BINDIR}
