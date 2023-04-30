@@ -1,3 +1,4 @@
+// [[file:../../../async_control.org::*Fold][Fold:1]]
 #include <cassert>
 #include <stdexec/execution.hpp>
 #include <exec/static_thread_pool.hpp>
@@ -24,7 +25,9 @@ struct fold_left_fn {
             stdexec::set_error_t(std::exception_ptr)> {
         using U = std::decay_t<
             std::invoke_result_t<F&, T, std::iter_reference_t<I>>>;
+// Fold:1 ends here
 
+// [[file:../../../async_control.org::*Fold][Fold:2]]
         if (first == last) {
             return stdexec::just(U(std::move(init)));
         }
@@ -40,6 +43,9 @@ struct fold_left_fn {
                 return (*this)(++i, last, u, f);
             });
         return std::move(nxt);
+// Fold:2 ends here
+
+// [[file:../../../async_control.org::*Fold][Fold:3]]
     }
 
     template <std::ranges::input_range R, class T, class F>
@@ -59,7 +65,9 @@ int main() {
     stdexec::scheduler auto sch = pool.get_scheduler();
 
     stdexec::sender auto begin = stdexec::schedule(sch);
+// Fold:3 ends here
 
+// [[file:../../../async_control.org::*Fold][Fold:4]]
     auto v = std::ranges::iota_view{1, 10'000};
 
     stdexec::sender auto work =
@@ -70,6 +78,9 @@ int main() {
         });
 
     auto [i] = stdexec::sync_wait(std::move(work)).value();
+// Fold:4 ends here
 
+// [[file:../../../async_control.org::*Fold][Fold:5]]
     std::cout << "work " << " = " << i << '\n';
 }
+// Fold:5 ends here

@@ -1,3 +1,4 @@
+// [[file:../../../async_control.org::*General Recursion][General Recursion:1]]
 #include <cassert>
 #include <stdexec/execution.hpp>
 #include <exec/static_thread_pool.hpp>
@@ -11,7 +12,9 @@ using any_sender_of = typename exec::any_receiver_ref<
 using any_int_sender = any_sender_of<stdexec::set_value_t(int),
                                      stdexec::set_stopped_t(),
                                      stdexec::set_error_t(std::exception_ptr)>;
+// General Recursion:1 ends here
 
+// [[file:../../../async_control.org::*General Recursion][General Recursion:2]]
 auto fib(int n) -> any_int_sender {
     if (n == 0)
         return stdexec::just(0);
@@ -32,7 +35,9 @@ auto fib(int n) -> any_int_sender {
 
     return work;
 }
+// General Recursion:2 ends here
 
+// [[file:../../../async_control.org::*General Recursion][General Recursion:3]]
 auto fibr(int n) -> int {
     if (n == 0)
         return 0;
@@ -49,7 +54,9 @@ int main() {
     stdexec::scheduler auto sch = pool.get_scheduler();
 
     stdexec::sender auto begin = stdexec::schedule(sch);
+// General Recursion:3 ends here
 
+// [[file:../../../async_control.org::*General Recursion][General Recursion:4]]
     int                  k = 36;
     stdexec::sender auto fibonacci =
         begin | stdexec::then([=]() { return k; }) |
@@ -59,6 +66,9 @@ int main() {
 
     auto [i] = stdexec::sync_wait(std::move(fibonacci)).value();
     std::cout << "fibonacci " << k << " = " << i << '\n';
+// General Recursion:4 ends here
 
+// [[file:../../../async_control.org::*General Recursion][General Recursion:5]]
     std::cout << "fibonacci " << k << " = " << fibr(k) << '\n';
 }
+// General Recursion:5 ends here
