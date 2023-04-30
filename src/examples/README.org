@@ -1,0 +1,39 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:t
+#+options: broken-links:nil c:nil creator:nil d:(not "LOGBOOK") date:t e:t
+#+options: email:nil f:t inline:t num:t p:nil pri:nil prop:nil stat:t tags:t
+#+options: tasks:t tex:t timestamp:t title:t toc:t todo:t |:t
+#+title: README
+#+date: <2023-04-29 Sat>
+#+author: R9100817
+#+email: sdowney@sdowney.org
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 29.0.90 (Org mode 9.6.4)
+#+cite_export:
+
+* Examples for Sender Receiver control flow patterns
+
+** hello.cpp
+[[hello.cpp][hello.cpp]] A very simple hello world
+
+** concurent.cpp
+[[concurent.cpp][concurent.cpp]] A multiway fork that runs concurrently
+
+** let_value.cpp
+[[let_value.cpp][let_value.cpp]] A multiway fork into a function that sends differently depending on earlier sent results. Dynamic graphs.
+
+** decision.cpp
+[[decision.cpp][decision.cpp]]
+Return a different sender depending on the value sent in, based on a predicate.
+
+Uses variant_sender.
+
+** Recursion
+[[factorial.cpp]]
+[[fibonacci.cpp]]
+[[fold.cpp]]
+
+** backtrack.cpp
+[[backtrack.cpp]]
+"Backtracking", telling downstream senders where to go next if they can't proceeed. Short circuit on success.
