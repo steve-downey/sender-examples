@@ -87,7 +87,15 @@ target_sources(
 target_link_libraries(backtrack PRIVATE stdexec tree)
 
 install(
-  TARGETS main hello concurent let_value decision factorial fibonacci
+  TARGETS
+  main
+  hello
+  concurent
+  let_value
+  decision
+  factorial
+  fibonacci
+  backtrack
   DESTINATION ${CMAKE_INSTALL_BINDIR}
   )
 

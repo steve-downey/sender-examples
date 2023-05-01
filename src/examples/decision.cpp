@@ -6,17 +6,20 @@
 #include <iostream>
 
 template <class... Ts>
-using any_sender_of = typename exec::any_receiver_ref<
-    stdexec::completion_signatures<Ts...>>::template any_sender<>;
+using any_sender_of =
+    typename exec::any_receiver_ref<
+        stdexec::completion_signatures<Ts...>>::
+        template any_sender<>;
 
-inline auto tst =
-    [](bool                 cond,
-       stdexec::sender auto left,
-       stdexec::sender auto right) -> exec::variant_sender<decltype(left), decltype(right)> {
-    if (cond)
-        return left;
-    else
-        return right;
+inline auto tst = [](bool                 cond,
+                     stdexec::sender auto left,
+                     stdexec::sender auto right)
+    -> exec::variant_sender<decltype(left),
+                            decltype(right)> {
+  if (cond)
+    return left;
+  else
+    return right;
 };
 
 int main() {

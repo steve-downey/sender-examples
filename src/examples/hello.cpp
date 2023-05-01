@@ -10,13 +10,15 @@ int main() {
 
   stdexec::sender auto begin = stdexec::schedule(sch);
   stdexec::sender auto hi    = stdexec::then(begin, [] {
-    std::cout << "Hello world! Have an int.";
+    std::cout << "Hello world! Have an int.\n";
     return 13;
   });
 
   auto add_42 = stdexec::then(hi, [](int arg) { return arg + 42; });
 
   auto [i] = stdexec::sync_wait(add_42).value();
+
+  std::cout << "The int is " << i << '\n';
 
   return i;
 }
