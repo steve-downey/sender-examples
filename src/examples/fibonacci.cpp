@@ -61,7 +61,7 @@ int main() {
 // General Recursion:3 ends here
 
 // [[file:../../../async_control.org::*General Recursion][General Recursion:4]]
-    int                  k = 30;
+int                  k = 30;
     stdexec::sender auto fibonacci =
         begin | stdexec::then([=]() { return k; }) |
         stdexec::let_value([](int k) { return fib(k); });

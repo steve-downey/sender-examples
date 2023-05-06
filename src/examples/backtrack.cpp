@@ -24,10 +24,10 @@ using any_node_sender =
                   stdexec::set_stopped_t(),
                   stdexec::set_error_t(std::exception_ptr)>;
 
-any_node_sender search_tree(auto                    test,
-                            tree::NodePtr<int>      tree,
-                            stdexec::scheduler auto sch,
-                            any_node_sender&&       fail) {
+auto search_tree(auto                    test,
+                 tree::NodePtr<int>      tree,
+                 stdexec::scheduler auto sch,
+                 any_node_sender&&       fail) -> any_node_sender {
     if (tree == nullptr) {
         return std::move(fail);
     }

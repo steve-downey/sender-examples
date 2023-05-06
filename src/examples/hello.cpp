@@ -20,6 +20,6 @@ int main() {
 
   std::cout << "The int is " << i << '\n';
 
-  return i;
+  return 0;
 }
 // Hello Async World:1 ends here

@@ -95,6 +95,7 @@ install(
   decision
   factorial
   fibonacci
+  fold
   backtrack
   DESTINATION ${CMAKE_INSTALL_BINDIR}
   )
