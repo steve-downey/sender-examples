@@ -181,7 +181,7 @@ The int is 55
 
 *** When All - Concurent Async
 
-#+BEGIN_SRC c++ :exports none :tangle ./src/examples/concurent.cpp :comments link
+#+begin_src C++ :exports none :tangle ./src/examples/concurent.cpp :comments link
 #include <stdexec/execution.hpp>
 #include <exec/static_thread_pool.hpp>
 
@@ -189,7 +189,7 @@ int main()
 {
 #+END_SRC
 
-#+begin_src c++ -n :tangle ./src/examples/concurent.cpp :comments link :exports code
+#+begin_src C++ -n :tangle ./src/examples/concurent.cpp :comments link :exports code
 exec::static_thread_pool pool(3);
 
 auto sched = pool.get_scheduler();
@@ -206,7 +206,7 @@ auto [i, j, k] = stdexec::sync_wait(std::move(work)).value();
 std::printf("%d %d %d\n", i, j, k);
 #+end_src
 
-#+BEGIN_SRC c++ :exports none :tangle ./src/examples/concurent.cpp :comments link
+#+begin_src C++ :exports none :tangle ./src/examples/concurent.cpp :comments link
 }
 #+END_SRC
 
@@ -240,7 +240,7 @@ Order of execution is by chance, order of results is determined.
 
 *** Dynamic Choice of Sender
 
-#+BEGIN_SRC c++ :exports none :tangle ./src/examples/let_value.cpp :comments link
+#+begin_src C++ :exports none :tangle ./src/examples/let_value.cpp :comments link
 #include <stdexec/execution.hpp>
 #include <exec/static_thread_pool.hpp>
 #include <string>
@@ -249,7 +249,8 @@ int main()
 {
 #+END_SRC
 
-#+begin_src c++ -n :tangle ./src/examples/let_value.cpp :comments link :exports code
+#+begin_src C++ -n :tangle ./src/examples/let_value.cpp :comments link :exports code
+
 exec::static_thread_pool pool(3);
 
 auto sched = pool.get_scheduler();
@@ -271,9 +272,10 @@ auto work = stdexec::when_all(
 auto [i, j, k] = stdexec::sync_wait(std::move(work)).value();
 
 std::printf("%s %s %s", i.c_str(), j.c_str(), k.c_str());
+
 #+end_src
 
-#+BEGIN_SRC c++ :exports none :tangle ./src/examples/let_value.cpp :comments link
+#+begin_src C++ :exports none :tangle ./src/examples/let_value.cpp :comments link
 }
 #+END_SRC
 
@@ -328,16 +330,18 @@ Sussman and Steele in 1975
 Where to go next rather than return the value.
 
 #+begin_src haskell
+
 add :: Float -> Float -> Float
 add a b = a + b
 
 add_cps :: Float -> Float -> (Float -> a) -> a
 add_cps a b cont = cont (a + b)
+
 #+end_src
 
 #+REVEAL: split
 
-#+begin_src c++
+#+begin_src C++
 auto add(float a, float b) -> float {
     return a + b;
 }
@@ -346,6 +350,7 @@ template<typename Cont>
 auto add_cps(float a, float b, Cont k) {
     return k(a+b);
 }
+
 #+end_src
 
 #+begin_notes
@@ -389,12 +394,14 @@ General continuations reified as a function.
 
 
 #+begin_quote
+
 Everyone knows that when a process executes a system call like ‘read’, it gets
 suspended. When the disk delivers the data, the process is resumed. That
 suspension of a process is its continuation. It is delimited: it is not the
 check-point of the whole OS, it is the check-point of a process only, from the
 invocation of main() up to the point main() returns. Normally these suspensions
 are resumed only once, but can be zero times (exit) or twice (fork).
+
 #+end_quote
 
 Oleg Kiselyov
@@ -406,7 +413,9 @@ If this qoute reminds you of coroutines, you are paying attention.
 
 *** Haskell's Cont Type
 #+begin_src haskell
+
 newtype Cont r a = Cont { runCont :: (a -> r) -> r }
+
 #+end_src
 
 This is _roughly_ equivalent to the sender value channel.
@@ -455,11 +464,13 @@ to
 
 
 #+begin_src haskell
+
 add :: Float -> Float -> Float
 add a b = a + b
 
 add_cps :: Float -> Float -> (Float -> A) -> A
 add_cps a b cont = cont (a + b)
+
 #+end_src
 
 
@@ -499,8 +510,10 @@ add_cps a b cont = cont (a + b)
 [[file:images/sender.png]]
 
 **** ~just~
-#+begin_src c++
+#+begin_src C++
+
 stdexec::just(0)
+
 #+end_src
 
 #+BEGIN_SRC ditaa :file images/just.png :cmdline -r
@@ -519,9 +532,11 @@ stdexec::just(0)
 
 **** ~then~
 
-#+begin_src c++
+#+begin_src C++
+
 auto f(A a) -> B;
 auto s = stdexec::just(a) | stdexec::then(f);
+
 #+end_src
 
 #+BEGIN_SRC ditaa :file images/then.png :cmdline -r
@@ -540,20 +555,22 @@ auto s = stdexec::just(a) | stdexec::then(f);
 
 **** ~let_value~
 
-#+begin_src c++
+#+begin_src C++
+
 sender_of<set_value_t(B)> auto snd(A a);
 auto s = stdexec::just(a) | stdexec::let_value(snd);
+
 #+end_src
 
 #+BEGIN_SRC ditaa :file images/let_value.png :cmdline -r
-+-------------------------+
-|                         |
-|                         |
-| +-+  a          +--+ b  |  b
-| | |----> snd--->|  |--->|-----> B
-| +-+             +--+    |
-|                         |
-+-------------------------+
++--------------------------+
+|                +--+ b    |
+|                |  |--->  |
+| +-+  a         +--+      |  b
+| | |----> snd------------>|-----> B
+| +-+                      |
+|                          |
++--------------------------+
 #+END_SRC
 
 #+RESULTS:
@@ -695,7 +712,7 @@ The monadic bind gives us the runtime choices we need.
 
 *** Sequence
 
-#+begin_src c++ -n
+#+begin_src C++ -n
   stdexec::sender auto work =
       stdexec::schedule(sch)
       | stdexec::then([] {
@@ -713,7 +730,7 @@ One thing after another.
 #+end_notes
 
 *** Decision
-#+BEGIN_SRC c++ :exports none :tangle ./src/examples/decision.cpp :comments link
+#+begin_src C++ :exports none :tangle ./src/examples/decision.cpp :comments link
 #include <stdexec/execution.hpp>
 #include <exec/static_thread_pool.hpp>
 #include <exec/any_sender_of.hpp>
@@ -740,7 +757,7 @@ inline auto tst = [](bool                 cond,
 int main() {
 #+END_SRC
 
-#+begin_src c++ -n :tangle ./src/examples/decision.cpp :comments link :exports code
+#+begin_src C++ -n :tangle ./src/examples/decision.cpp :comments link :exports code
 exec::static_thread_pool pool(8);
 
 stdexec::scheduler auto sch = pool.get_scheduler();
@@ -768,7 +785,7 @@ stdexec::sender auto branch =
 stdexec::sync_wait(std::move(branch));
 #+end_src
 
-#+BEGIN_SRC c++ :exports none :tangle ./src/examples/decision.cpp :comments link
+#+begin_src C++ :exports none :tangle ./src/examples/decision.cpp :comments link
 }
 #+END_SRC
 
@@ -784,7 +801,7 @@ Control what sender is sent at rentime depending on the state of the program whe
 #+end_notes
 
 **** ~tst~ function
-#+BEGIN_SRC c++ -n :exports code
+#+begin_src C++ -n :exports code
 
 inline auto tst =
     [](bool                 cond,
@@ -806,7 +823,7 @@ inline auto tst =
 #+end_notes
 
 **** Simple Recursion
-#+begin_src c++ :exports none :tangle ./src/examples/factorial.cpp :comments link
+#+begin_src C++ :exports none :tangle ./src/examples/factorial.cpp :comments link
 #include <cassert>
 #include <stdexec/execution.hpp>
 #include <exec/static_thread_pool.hpp>
@@ -821,7 +838,7 @@ using any_sender_of = typename exec::any_receiver_ref<
 
 #+END_SRC
 
-#+begin_src c++ -n :tangle ./src/examples/factorial.cpp :comments link :exports code
+#+begin_src C++ -n :tangle ./src/examples/factorial.cpp :comments link :exports code
 
 using any_int_sender =
     any_sender_of<stdexec::set_value_t(int),
@@ -840,7 +857,7 @@ auto fac(int n) -> any_int_sender {
 
 #+end_src
 
-#+BEGIN_SRC c++ :exports none :tangle ./src/examples/factorial.cpp :comments link
+#+begin_src C++ :exports none :tangle ./src/examples/factorial.cpp :comments link
 
 int main() {
     exec::static_thread_pool pool(8);
@@ -853,7 +870,7 @@ int main() {
 
 #+REVEAL: split
 
-#+begin_src c++ -n :tangle ./src/examples/factorial.cpp :comments link :exports code
+#+begin_src C++ -n :tangle ./src/examples/factorial.cpp :comments link :exports code
 
     int                  k = 10;
     stdexec::sender auto factorial =
@@ -868,7 +885,7 @@ int main() {
 
 #+end_src
 
-#+BEGIN_SRC c++ :exports none :tangle ./src/examples/factorial.cpp :comments link
+#+begin_src C++ :exports none :tangle ./src/examples/factorial.cpp :comments link
     }
 
 #+END_SRC
@@ -894,7 +911,7 @@ factorial 10 = 3628800
 #+end_example
 
 **** General Recursion
-#+begin_src c++ :exports none :tangle ./src/examples/fibonacci.cpp :comments link
+#+begin_src C++ :exports none :tangle ./src/examples/fibonacci.cpp :comments link
 #include <cassert>
 #include <stdexec/execution.hpp>
 #include <exec/static_thread_pool.hpp>
@@ -920,7 +937,7 @@ using any_int_sender = any_sender_of<stdexec::set_value_t(int),
                                      stdexec::set_error_t(std::exception_ptr)>;
 #+END_SRC
 
-#+begin_src c++ -n :tangle ./src/examples/fibonacci.cpp :comments link :exports code
+#+begin_src C++ -n :tangle ./src/examples/fibonacci.cpp :comments link :exports code
 auto fib(int n) -> any_int_sender {
     if (n == 0)
         return stdexec::on(getDefaultScheduler(),  stdexec::just(0));
@@ -940,7 +957,7 @@ auto fib(int n) -> any_int_sender {
 
 #+end_src
 
-#+BEGIN_SRC c++ :exports none :tangle ./src/examples/fibonacci.cpp :comments link
+#+begin_src C++ :exports none :tangle ./src/examples/fibonacci.cpp :comments link
 auto fibr(int n) -> int {
     if (n == 0)
         return 0;
@@ -959,7 +976,7 @@ int main() {
 
 #+REVEAL: split
 
-#+begin_src c++ -n :tangle ./src/examples/fibonacci.cpp :comments link :exports code
+#+begin_src C++ -n :tangle ./src/examples/fibonacci.cpp :comments link :exports code
 
 int                  k = 30;
     stdexec::sender auto fibonacci =
@@ -972,7 +989,7 @@ int                  k = 30;
     std::cout << "fibonacci " << k << " = " << i << '\n';
 #+end_src
 
-#+BEGIN_SRC c++ :exports none :tangle ./src/examples/fibonacci.cpp :comments link
+#+begin_src C++ :exports none :tangle ./src/examples/fibonacci.cpp :comments link
     std::cout << "fibonacci " << k << " = " << fibr(k) << '\n';
 }
 
@@ -988,7 +1005,7 @@ fibonacci 30 = 832040
 #+end_example
 
 **** Fold
-#+begin_src c++ :exports none :tangle ./src/examples/fold.cpp :comments link
+#+begin_src C++ :exports none :tangle ./src/examples/fold.cpp :comments link
 #include <cassert>
 #include <stdexec/execution.hpp>
 #include <exec/static_thread_pool.hpp>
@@ -1017,7 +1034,7 @@ struct fold_left_fn {
             std::invoke_result_t<F&, T, std::iter_reference_t<I>>>;
 #+END_SRC
 
-#+begin_src c++ -n :tangle ./src/examples/fold.cpp :comments link :exports code
+#+begin_src C++ -n :tangle ./src/examples/fold.cpp :comments link :exports code
 
         if (first == last) {
             return stdexec::just(U(std::move(init)));
@@ -1036,7 +1053,7 @@ struct fold_left_fn {
         return std::move(nxt);
 #+end_src
 
-#+BEGIN_SRC c++ :exports none :tangle ./src/examples/fold.cpp :comments link
+#+begin_src C++ :exports none :tangle ./src/examples/fold.cpp :comments link
     }
 
     template <std::ranges::input_range R, class T, class F>
@@ -1060,7 +1077,7 @@ int main() {
 
 #+REVEAL: split
 
-#+begin_src c++ -n :tangle ./src/examples/fold.cpp :comments link :exports code
+#+begin_src C++ -n :tangle ./src/examples/fold.cpp :comments link :exports code
 
     auto v = std::ranges::iota_view{1, 10'000};
 
@@ -1075,7 +1092,7 @@ int main() {
 
 #+end_src
 
-#+BEGIN_SRC c++ :exports none :tangle ./src/examples/fold.cpp :comments link
+#+begin_src C++ :exports none :tangle ./src/examples/fold.cpp :comments link
     std::cout << "work " << " = " << i << '\n';
 }
 #+end_src
@@ -1088,7 +1105,7 @@ work  = 49995000
 #+end_example
 
 **** Backtrack
-#+begin_src c++ :exports none :tangle ./src/examples/backtrack.cpp :comments link
+#+begin_src C++ :exports none :tangle ./src/examples/backtrack.cpp :comments link
 #include <cassert>
 
 #include <stdexec/execution.hpp>
@@ -1109,7 +1126,7 @@ using any_int_sender = any_sender_of<stdexec::set_value_t(int),
 #+end_src
 
 
-#+begin_src c++ :exports code :tangle ./src/examples/backtrack.cpp :comments link
+#+begin_src C++ :exports code :tangle ./src/examples/backtrack.cpp :comments link
 using any_node_sender =
     any_sender_of<stdexec::set_value_t(tree::NodePtr<int>),
                   stdexec::set_stopped_t(),
@@ -1144,7 +1161,7 @@ auto search_tree(auto                    test,
 
 #+REVEAL: split
 
-#+begin_src c++ :exports none :tangle ./src/examples/backtrack.cpp :comments link
+#+begin_src C++ :exports none :tangle ./src/examples/backtrack.cpp :comments link
 int main() {
     exec::static_thread_pool pool(8);
 
@@ -1153,7 +1170,7 @@ int main() {
     stdexec::sender auto begin = stdexec::schedule(sch);
 #+end_src
 
-#+begin_src c++ :tangle ./src/examples/backtrack.cpp :comments link :exports code
+#+begin_src C++ :tangle ./src/examples/backtrack.cpp :comments link :exports code
     tree::NodePtr<int> t;
     for (auto i : std::ranges::views::iota(1, 10'000)) {
         tree::Tree<int>::insert(i, t);
@@ -1176,7 +1193,7 @@ int main() {
               << " = " << n->data() << '\n';
 #+end_src
 
-#+begin_src c++ :exports none :tangle ./src/examples/backtrack.cpp :comments link
+#+begin_src C++ :exports none :tangle ./src/examples/backtrack.cpp :comments link
 }
 #+end_src
 

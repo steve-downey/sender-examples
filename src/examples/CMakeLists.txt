@@ -86,6 +86,16 @@ target_sources(
 
 target_link_libraries(backtrack PRIVATE stdexec tree)
 
+add_executable(loop "")
+
+target_sources(
+  loop
+  PRIVATE
+  loop.cpp)
+
+target_link_libraries(loop PRIVATE stdexec)
+
+
 install(
   TARGETS
   main
@@ -97,6 +107,7 @@ install(
   fibonacci
   fold
   backtrack
+  loop
   DESTINATION ${CMAKE_INSTALL_BINDIR}
   )
 
