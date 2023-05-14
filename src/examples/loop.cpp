@@ -6,20 +6,19 @@
 #include <iostream>
 
 auto snder(int t) {
-    int n = 0;
-    int acc = 0;
+    int                  n   = 0;
+    int                  acc = 0;
     stdexec::sender auto snd =
-        stdexec::just(t)
-        | stdexec::let_value([&acc, &n](int k) {
-            return stdexec::just()
-                | stdexec::then([&n, &acc, k] {
-                    acc += n;
-                    ++n;
-                    return n == k;
-                })
-                | exec::repeat_effect_until();
-        })
-        | stdexec::then([&acc]() { return acc; });
+        stdexec::just(t) |
+        stdexec::let_value([n = n, acc = acc](int k) mutable {
+            return stdexec::just() | stdexec::then([&n, &acc, k] {
+                       acc += n;
+                       ++n;
+                       return n == k;
+                   }) |
+                   exec::repeat_effect_until() |
+                   stdexec::then([&acc]() { return acc; });
+        });
 
     return snd;
 }

@@ -3,7 +3,7 @@
 #include <exec/static_thread_pool.hpp>
 #include <exec/any_sender_of.hpp>
 #include <iostream>
-
+#include <exec/repeat_effect_until.hpp>
 
 #include <gtest/gtest.h>
 
@@ -52,4 +52,34 @@ TEST(AsyncTest, Factorial) {
     ASSERT_EQ(k, 2004310016);
 
     std::cout << "factorial " << k << " = " << i << '\n';
+}
+
+auto snder(int t) {
+    int                  n   = 0;
+    int                  acc = 0;
+    stdexec::sender auto snd =
+        stdexec::just(t) |
+        stdexec::let_value([n = n, acc = acc](int k) mutable {
+            return stdexec::just()
+                | stdexec::then([&n, &acc, k] {
+                    acc += n;
+                    ++n;
+                    return n == k;
+                })
+                | exec::repeat_effect_until()
+                | stdexec::then([&acc]() {
+                    return acc;
+                });
+        });
+
+    return snd;
+}
+
+TEST(AsyncTest, Loop) {
+
+    stdexec::sender auto work =
+        stdexec::just(101) | stdexec::let_value(snder);
+
+    auto [i] = stdexec::sync_wait(std::move(work)).value();
+    ASSERT_EQ(i, 5050);
 }
