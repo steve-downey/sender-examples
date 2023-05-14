@@ -14,11 +14,10 @@
 
 [[https://github.com/steve-downey/scratch/actions/workflows/ci.yml/badge.svg]]
 
-* A Base 'scratch' template repository
+* Sender and Receiver Flow Control Examples
 
-Scratch work
+This repository contains examples of basic structured flow control using senders.
 
-The repository is also my work on, if not 'best', at least good practices with CMake and emerging consensus on file and directory layout.
 
 * CMake Workflow -- targets.mk
 The targets.mk Makefile embodies the normal cmake workflow, making sure the build area is configured for a particular toolchain, compile is run after that, that tests are rebuilt and run after compiling, and so forth.
